@@ -9,20 +9,23 @@ import {
   TouchableHighlight
 } from "react-native";
 import MapView, { Polyline, Marker } from "react-native-maps";
-import apiKey from "./google_api_key";
+import apiKey from "../google_api_key";
 import _ from "lodash";
-import PolyLine from "@mapbox/polyline"; //import polyline for route
+import PolyLine from "@mapbox/polyline";
+import socketIO from "socket.io-client";
+import BottomButton from "../components/BottomButton";
 
-export default class App extends Component {
+export default class Passenger extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: "",
       latitude: 0,
       longitude: 0,
       destination: "",
       predictions: [],
-      pointCoords: []
+      pointCoords: [],
+      routeResponse: {},
+      lookingForDriver: false
     };
     this.onChangeDestinationDebounced = _.debounce(
       this.onChangeDestination,
@@ -44,7 +47,6 @@ export default class App extends Component {
     );
   }
 
-  //to get route directions
   async getRouteDirections(destinationPlaceId, destinationName) {
     try {
       const response = await fetch(
@@ -63,16 +65,18 @@ export default class App extends Component {
       this.setState({
         pointCoords,
         predictions: [],
-        destination: destinationName
+        destination: destinationName,
+        routeResponse: json
       });
       Keyboard.dismiss();
-      this.map.fitToCoordinates(pointCoords);
+      this.map.fitToCoordinates(pointCoords, {
+        edgePadding: { top: 20, bottom: 20, left: 20, right: 20 }
+      });
     } catch (error) {
       console.error(error);
     }
   }
 
-  //destinations
   async onChangeDestination(destination) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}
     &input=${destination}&location=${this.state.latitude},${
@@ -91,13 +95,30 @@ export default class App extends Component {
     }
   }
 
+  async requestDriver() {
+    var socket = socketIO.connect("http://192.168.0.27:3000");
+
+    socket.on("connect", () => {
+      console.log("client connected");
+      //Request a taxi!
+      socket.emit("taxiRequest", this.state.routeResponse);
+    });
+  }
+
   render() {
     let marker = null;
+    let getDriver = null;
 
     if (this.state.pointCoords.length > 1) {
       marker = (
         <Marker
           coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
+        />
+      );
+      getDriver = (
+        <BottomButton
+          onPressFunction={() => this.requestDriver()}
+          buttonText="REQUEST 🚗"
         />
       );
     }
@@ -149,17 +170,32 @@ export default class App extends Component {
           clearButtonMode="always"
           onChangeText={destination => {
             console.log(destination);
-            this.setState({ destination });
+            this.setState({ destination, pointCoords: [] });
             this.onChangeDestinationDebounced(destination);
           }}
         />
         {predictions}
+        {getDriver}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  findDriver: {
+    backgroundColor: "black",
+    marginTop: "auto",
+    margin: 20,
+    padding: 15,
+    paddingLeft: 30,
+    paddingRight: 30,
+    alignSelf: "center"
+  },
+  findDriverText: {
+    fontSize: 20,
+    color: "white",
+    fontWeight: "600"
+  },
   suggestions: {
     backgroundColor: "white",
     padding: 5,
@@ -184,4 +220,3 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject
   }
 });
-
