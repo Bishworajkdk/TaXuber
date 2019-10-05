@@ -147,11 +147,9 @@ export default class App extends Component {
           style={styles.destinationInput}
           value={this.state.destination}
           clearButtonMode="always"
-          onChangeText={destination => {
-            console.log(destination);
-            this.setState({ destination });
-            this.onChangeDestinationDebounced(destination);
-          }}
+          onChangeText={destination =>
+            this.onChangeDestinationDebounced(destination)
+          }
         />
         {predictions}
       </View>
