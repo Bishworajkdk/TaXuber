@@ -10,6 +10,7 @@ import {
 import MapView from "react-native-maps";
 import apiKey from "../google_api_key";
 import _ from "lodash";
+import Geolocation from '@react-native-community/geolocation';
 
 //Show map... select location to go to
 //Get location route with Google Location API
@@ -35,7 +36,7 @@ export default class Passenger extends Component {
 
   componentDidMount() {
     //Get current location and set initial region to this
-    navigator.geolocation.getCurrentPosition(
+    Geolocation.getCurrentPosition(
       position => {
         this.setState({
           latitude: position.coords.latitude,
