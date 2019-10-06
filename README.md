@@ -11,9 +11,10 @@ Front end:
 2. NativeBase
 3. Socket.io-client
 4. React-native maps
+
 Back-end:
 1. Node.js(Nodemon)
 2. Socket IO
-3. API Calls
+3. Google API Calls
 
 ***Will use MongoDB for DB and rest api for login in future.***
