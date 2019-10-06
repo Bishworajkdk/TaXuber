@@ -1,30 +1,38 @@
-import Geolocation from '@react-native-community/geolocation';
 import React, { Component } from "react";
 import {
-  TextInput,
   StyleSheet,
-  Text,
+  TextInput,
   View,
+  Text,
+  TouchableHighlight,
   Keyboard,
-  TouchableHighlight
+  ActivityIndicator
 } from "react-native";
 import MapView, { Polyline, Marker } from "react-native-maps";
 import apiKey from "../google_api_key";
-import _ from "lodash";
+import Geolocation from '@react-native-community/geolocation';
+import _ from "lodash"; //lodash package
 import PolyLine from "@mapbox/polyline";
 import socketIO from "socket.io-client";
 import BottomButton from "../components/BottomButton";
+
+//Show map... select location to go to
+//Get location route with Google Location API
+//Send driver request
+//Wait for driver to arrive
+//Get picked up by driver
+//Let driver drive to location
 
 export default class Passenger extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      error: "",
       latitude: 0,
       longitude: 0,
       destination: "",
       predictions: [],
       pointCoords: [],
-      routeResponse: {},
       lookingForDriver: false
     };
     this.onChangeDestinationDebounced = _.debounce(
@@ -51,17 +59,20 @@ export default class Passenger extends Component {
     try {
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/directions/json?origin=${
-          this.state.latitude
+        this.state.latitude
         },${
-          this.state.longitude
+        this.state.longitude
         }&destination=place_id:${destinationPlaceId}&key=${apiKey}`
       );
       const json = await response.json();
       console.log(json);
+
+      //Decode the polyline
       const points = PolyLine.decode(json.routes[0].overview_polyline.points);
       const pointCoords = points.map(point => {
         return { latitude: point[0], longitude: point[1] };
       });
+
       this.setState({
         pointCoords,
         predictions: [],
@@ -77,11 +88,12 @@ export default class Passenger extends Component {
     }
   }
 
+  // Fetch the routes from Google Directions API
   async onChangeDestination(destination) {
     const apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}
-    &input=${destination}&location=${this.state.latitude},${
+      &input=${destination}&location=${this.state.latitude},${
       this.state.longitude
-    }&radius=2000`;
+      }&radius=2000`;
     console.log(apiUrl);
     try {
       const result = await fetch(apiUrl);
@@ -96,11 +108,13 @@ export default class Passenger extends Component {
   }
 
   async requestDriver() {
-    var socket = socketIO.connect("http://192.168.0.27:3000");
+    this.setState({lookingForDriver: true});
+
+    const socket = socketIO.connect("http://127.0.0.1:3000");
 
     socket.on("connect", () => {
       console.log("client connected");
-      //Request a taxi!
+      //request a taxi!
       socket.emit("taxiRequest", this.state.routeResponse);
     });
   }
@@ -108,18 +122,32 @@ export default class Passenger extends Component {
   render() {
     let marker = null;
     let getDriver = null;
+    let findingDriverActIndicator = null;
 
+    if(this.state.lookingForDriver){
+      findingDriverActIndicator =(
+      <ActivityIndicator 
+      size="large" 
+      animating={this.state.lookingForDriver} />
+      );
+    }
+
+    //array used to draw routes
     if (this.state.pointCoords.length > 1) {
       marker = (
         <Marker
+          //Storing the routes to this.state.coords
           coordinate={this.state.pointCoords[this.state.pointCoords.length - 1]}
         />
       );
+
       getDriver = (
         <BottomButton
           onPressFunction={() => this.requestDriver()}
           buttonText="REQUEST 🚗"
-        />
+        >
+          {findingDriverActIndicator}
+        </BottomButton>
       );
     }
 
