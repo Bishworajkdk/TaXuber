@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     width: 200
   },
   selectionImageP: {
-    height: 250,
+    height: 200,
     width: 200
   }
 
