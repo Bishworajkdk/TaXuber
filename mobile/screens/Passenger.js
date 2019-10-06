@@ -117,6 +117,10 @@ export default class Passenger extends Component {
       //request a taxi!
       socket.emit("taxiRequest", this.state.routeResponse);
     });
+
+    socket.on("driverLocation", (driverLocation) => {
+      this.setState({lookingForDriver: false});
+    });
   }
 
   render() {
