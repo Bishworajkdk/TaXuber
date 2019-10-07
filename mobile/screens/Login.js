@@ -29,6 +29,8 @@ export default class Login extends Component {
                 <LoginForm  email={this.state.email} 
                 password={this.state.password} 
                 handleChange={this.handleChange}/>
+
+                <Image source={require("../images/taxi.jpg")} style ={styles.logo} />
             </View>
         );
     }
@@ -46,6 +48,11 @@ const styles = StyleSheet.create({
        marginTop: 30,
        fontFamily: Platform.OS === "android" ? "sans-serif-light" :undefined,
        fontWeight: "200" 
+    },
+    logo:{
+        height: 300,
+        width: 300,
+        alignSelf: "center" 
     }
 });
  

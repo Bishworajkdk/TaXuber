@@ -8,10 +8,10 @@ let taxiSocket = null;
 
 io.on("connection", socket => {
   console.log("a user connected :D");
-  socket.on("taxiRequest", taxiRoute => {
+  socket.on("taxiRequest", routeResponse => {
     console.log("Someone wants a taxi!");
     if (taxiSocket !== null) {
-      taxiSocket.emit("taxiRequest", taxiRoute);
+      taxiSocket.emit("taxiRequest", routeResponse);
     }
   });
 
@@ -21,4 +21,4 @@ io.on("connection", socket => {
   });
 });
 
-server.listen(port, () => console.log("server running on port:" + port));
+server.listen(port, () => console.log("server running on port: " + port));
