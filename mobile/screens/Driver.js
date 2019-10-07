@@ -21,7 +21,6 @@ export default class Driver extends Component {
 
     this.acceptPassengerRequest = this.findPassengers.bind(this);
     this.findPassengers = this.findPassengers.bind(this);
-    this.socket = null;
   }
 
   componentDidMount() {
@@ -71,14 +70,15 @@ export default class Driver extends Component {
 
       console.log(this.state.lookingForPassengers);
 
-      this.socket = socketIO.connect("http://127.0.0.1 :3000");
-      
-      this.socket.on("connect", () => {
-        this.socket.emit("passengerRequest");
+      //mac ip address
+      const socket = socketIO.connect("http://192.168.1.104:3000");
+
+      socket.on("connect", () => {
+        socket.emit("passengerRequest");
       });
 
       //sends request
-      this.socket.on("taxiRequest", routeResponse => {
+      socket.on("taxiRequest", routeResponse => {
         console.log(routeResponse);
         this.setState({
           lookingForPassengers: false,
@@ -93,10 +93,6 @@ export default class Driver extends Component {
 
   acceptPassengerRequest(){
     //send the driver location to passenger
-    this.socket.emit("driverLocation", {
-      latitude: this.state.latitude,
-      longitude: this.state.longitude
-    });
     
   }
 

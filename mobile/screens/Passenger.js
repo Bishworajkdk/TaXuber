@@ -57,6 +57,7 @@ export default class Passenger extends Component {
 
   async getRouteDirections(destinationPlaceId, destinationName) {
     try {
+      //fetching route api to display current route
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/directions/json?origin=${
         this.state.latitude
@@ -110,16 +111,12 @@ export default class Passenger extends Component {
   async requestDriver() {
     this.setState({lookingForDriver: true});
 
-    const socket = socketIO.connect("http://127.0.0.1:3000");
+    const socket = socketIO.connect("http://192.168.1.104:3000");
 
     socket.on("connect", () => {
       console.log("client connected");
       //request a taxi!
       socket.emit("taxiRequest", this.state.routeResponse);
-    });
-
-    socket.on("driverLocation", (driverLocation) => {
-      this.setState({lookingForDriver: false});
     });
   }
 

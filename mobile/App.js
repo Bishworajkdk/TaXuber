@@ -72,8 +72,9 @@ const styles = StyleSheet.create({
     width: 200
   },
   selectionImageP: {
-    height: 200,
-    width: 200
+    height: 150,
+    width: 100
+    
   }
 
 });
