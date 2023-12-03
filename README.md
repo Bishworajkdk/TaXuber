@@ -17,4 +17,5 @@ Back-end:
 2. Socket IO
 3. Google API Calls
 
-***Will use MongoDB for DB and rest api for login in future.***
+![image](https://github.com/Bishworajkdk/TaXuber/assets/42015144/bdfe05c3-a2fd-4595-896b-59de468f9e09)
+
