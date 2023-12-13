@@ -1,21 +1,46 @@
-# TaXuber
-App designed to create communication between driver and passengers
+# TaXuber - Ride-Sharing App
 
-***Still under working phase***
-The Backend integrated theme is enriched with all the required backend functionality
-that includes Socket.IO to handle bidirectional communication between server and client (user).
+TaXuber is an application designed to facilitate communication between drivers and passengers, creating a seamless ride-sharing experience similar to Uber.
 
-Technologies Used: 
-Front end:
-1. React-Native
-2. NativeBase
-3. Socket.io-client
-4. React-native maps
+## Features
 
-Back-end:
-1. Node.js(Nodemon)
-2. Socket IO
-3. Google API Calls
+- **Dual Interface:** The app provides distinct interfaces for both drivers and passengers, ensuring a user-friendly experience for both.
+  
+- **Request and Accept:** Users can send ride requests and accept them on the other end, streamlining the process of booking a ride.
 
-![image](https://github.com/Bishworajkdk/TaXuber/assets/42015144/bdfe05c3-a2fd-4595-896b-59de468f9e09)
+## Current Status
+
+The application is currently in the working phase, with ongoing development to enhance its features and functionalities.
+
+## Technology Stack
+
+### Frontend
+
+- React-Native
+- NativeBase
+- Socket.io-client
+- React-native maps
+
+### Backend
+
+- Node.js (Nodemon)
+- Socket.IO
+- Google API Calls
+
+*Please note that this project is still under development, and improvements are being made regularly.*
+
+## Getting Started
+
+To run the application locally, follow these steps:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/TaXuber.git
+   cd TaXuber && npm install
+   npm start
+
+Copy and paste this markdown into your README.md file on GitHub. This format is designed to be readable on GitHub and includes proper markdown syntax.
+
+
+
 
