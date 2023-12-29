@@ -11,23 +11,8 @@ TaXuber is an application designed to facilitate communication between drivers a
 ## Current Status
 
 The application is currently in the working phase, with ongoing development to enhance its features and functionalities.
+Video link: https://drive.google.com/file/d/1OAlrUgAUtIviTfiJje7RPGwS4oebcOLJ/view?usp=sharing
 
-## Technology Stack
-
-### Frontend
-
-- React-Native
-- NativeBase
-- Socket.io-client
-- React-native maps
-
-### Backend
-
-- Node.js (Nodemon)
-- Socket.IO
-- Google API Calls
-
-*Please note that this project is still under development, and improvements are being made regularly.*
 
 ## Getting Started
 
